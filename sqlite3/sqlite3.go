@@ -30,35 +30,72 @@ func Open(dbpath string) (s *Database, err error) {
 	if err != nil {
 		return nil, errors.Wrap(err, "open sqlite3 error")
 	}
-	err = s.db.Create(Sqlite3GroupMessageTableName, &StoredGroupMessage{})
+	_, err = s.db.DB.Exec("PRAGMA foreign_keys = ON;")
 	if err != nil {
-		return nil, errors.Wrap(err, "create sqlite3 table error")
-	}
-	err = s.db.Create(Sqlite3MessageAttributeTableName, &StoredMessageAttribute{})
-	if err != nil {
-		return nil, errors.Wrap(err, "create sqlite3 table error")
-	}
-	err = s.db.Create(Sqlite3GuildMessageAttributeTableName, &StoredGuildMessageAttribute{})
-	if err != nil {
-		return nil, errors.Wrap(err, "create sqlite3 table error")
-	}
-	err = s.db.Create(Sqlite3QuotedInfoTableName, &QuotedInfo{})
-	if err != nil {
-		return nil, errors.Wrap(err, "create sqlite3 table error")
-	}
-	err = s.db.Create(Sqlite3PrivateMessageTableName, &StoredPrivateMessage{})
-	if err != nil {
-		return nil, errors.Wrap(err, "create sqlite3 table error")
-	}
-	err = s.db.Create(Sqlite3GuildChannelMessageTableName, &StoredGuildChannelMessage{})
-	if err != nil {
-		return nil, errors.Wrap(err, "create sqlite3 table error")
+		return nil, errors.Wrap(err, "enable foreign_keys error")
 	}
 	err = s.db.Create(Sqlite3UinInfoTableName, &UinInfo{})
 	if err != nil {
 		return nil, errors.Wrap(err, "create sqlite3 table error")
 	}
+	err = s.db.Insert(Sqlite3UinInfoTableName, &UinInfo{Name: "null"})
+	if err != nil {
+		return nil, errors.Wrap(err, "insert into sqlite3 table "+Sqlite3UinInfoTableName+" error")
+	}
 	err = s.db.Create(Sqlite3TinyInfoTableName, &TinyInfo{})
+	if err != nil {
+		return nil, errors.Wrap(err, "create sqlite3 table error")
+	}
+	err = s.db.Insert(Sqlite3TinyInfoTableName, &TinyInfo{Name: "null"})
+	if err != nil {
+		return nil, errors.Wrap(err, "insert into sqlite3 table "+Sqlite3TinyInfoTableName+" error")
+	}
+	err = s.db.Create(Sqlite3MessageAttributeTableName, &StoredMessageAttribute{},
+		"FOREIGN KEY(SenderUin) REFERENCES "+Sqlite3UinInfoTableName+"(Uin)",
+	)
+	if err != nil {
+		return nil, errors.Wrap(err, "create sqlite3 table error")
+	}
+	err = s.db.Insert(Sqlite3MessageAttributeTableName, &StoredMessageAttribute{})
+	if err != nil {
+		return nil, errors.Wrap(err, "insert into sqlite3 table "+Sqlite3MessageAttributeTableName+" error")
+	}
+	err = s.db.Create(Sqlite3GuildMessageAttributeTableName, &StoredGuildMessageAttribute{},
+		"FOREIGN KEY(SenderTinyID) REFERENCES "+Sqlite3TinyInfoTableName+"(ID)",
+	)
+	if err != nil {
+		return nil, errors.Wrap(err, "create sqlite3 table error")
+	}
+	err = s.db.Insert(Sqlite3GuildMessageAttributeTableName, &StoredGuildMessageAttribute{})
+	if err != nil {
+		return nil, errors.Wrap(err, "insert into sqlite3 table "+Sqlite3GuildMessageAttributeTableName+" error")
+	}
+	err = s.db.Create(Sqlite3QuotedInfoTableName, &QuotedInfo{})
+	if err != nil {
+		return nil, errors.Wrap(err, "create sqlite3 table error")
+	}
+	err = s.db.Insert(Sqlite3QuotedInfoTableName, &QuotedInfo{QuotedContent: "null"})
+	if err != nil {
+		return nil, errors.Wrap(err, "insert into sqlite3 table "+Sqlite3QuotedInfoTableName+" error")
+	}
+	err = s.db.Create(Sqlite3GroupMessageTableName, &StoredGroupMessage{},
+		"FOREIGN KEY(AttributeID) REFERENCES "+Sqlite3MessageAttributeTableName+"(ID)",
+		"FOREIGN KEY(QuotedInfoID) REFERENCES "+Sqlite3QuotedInfoTableName+"(ID)",
+	)
+	if err != nil {
+		return nil, errors.Wrap(err, "create sqlite3 table error")
+	}
+	err = s.db.Create(Sqlite3PrivateMessageTableName, &StoredPrivateMessage{},
+		"FOREIGN KEY(AttributeID) REFERENCES "+Sqlite3MessageAttributeTableName+"(ID)",
+		"FOREIGN KEY(QuotedInfoID) REFERENCES "+Sqlite3QuotedInfoTableName+"(ID)",
+	)
+	if err != nil {
+		return nil, errors.Wrap(err, "create sqlite3 table error")
+	}
+	err = s.db.Create(Sqlite3GuildChannelMessageTableName, &StoredGuildChannelMessage{},
+		"FOREIGN KEY(AttributeID) REFERENCES "+Sqlite3MessageAttributeTableName+"(ID)",
+		"FOREIGN KEY(QuotedInfoID) REFERENCES "+Sqlite3QuotedInfoTableName+"(ID)",
+	)
 	if err != nil {
 		return nil, errors.Wrap(err, "create sqlite3 table error")
 	}

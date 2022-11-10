@@ -3,7 +3,7 @@ module github.com/RomiChan/gocq-sqlite3-migrate
 go 1.19
 
 require (
-	github.com/FloatTech/sqlite v0.5.0
+	github.com/FloatTech/sqlite v0.5.1
 	github.com/Mrs4s/MiraiGo v0.0.0-20220828090150-a3c348100dfe
 	github.com/Mrs4s/go-cqhttp v1.0.0-rc3.0.20221109121432-fa267b6a2d47
 	github.com/pkg/errors v0.9.1
