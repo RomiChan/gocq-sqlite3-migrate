@@ -4,17 +4,18 @@
 package sqlite3
 
 import (
-	"encoding/json"
 	"hash/crc64"
 	"sync"
 	"time"
 
 	sql "github.com/FloatTech/sqlite"
 	"github.com/pkg/errors"
+	"gopkg.in/yaml.v3"
 
 	"github.com/Mrs4s/MiraiGo/binary"
 	"github.com/Mrs4s/MiraiGo/utils"
-	"github.com/Mrs4s/go-cqhttp/db"
+
+	"github.com/RomiChan/gocq-sqlite3-migrate/db"
 )
 
 type Database struct {
@@ -152,7 +153,7 @@ func (s *Database) InsertGroupMessage(msg *db.StoredGroupMessage) error {
 		h.Write(binary.NewWriterF(func(w *binary.Writer) {
 			w.WriteUInt32(uint32(msg.QuotedInfo.PrevGlobalID))
 		}))
-		content, err := json.Marshal(&msg.QuotedInfo.QuotedContent)
+		content, err := yaml.Marshal(&msg.QuotedInfo)
 		if err != nil {
 			return errors.Wrap(err, "insert marshal QuotedContent error")
 		}
@@ -173,7 +174,7 @@ func (s *Database) InsertGroupMessage(msg *db.StoredGroupMessage) error {
 			grpmsg.QuotedInfoID = id
 		}
 	}
-	content, err := json.Marshal(&msg.Content)
+	content, err := yaml.Marshal(&msg)
 	if err != nil {
 		return errors.Wrap(err, "insert marshal Content error")
 	}
@@ -233,7 +234,7 @@ func (s *Database) InsertPrivateMessage(msg *db.StoredPrivateMessage) error {
 		h.Write(binary.NewWriterF(func(w *binary.Writer) {
 			w.WriteUInt32(uint32(msg.QuotedInfo.PrevGlobalID))
 		}))
-		content, err := json.Marshal(&msg.QuotedInfo.QuotedContent)
+		content, err := yaml.Marshal(&msg.QuotedInfo)
 		if err != nil {
 			return errors.Wrap(err, "insert marshal QuotedContent error")
 		}
@@ -254,7 +255,7 @@ func (s *Database) InsertPrivateMessage(msg *db.StoredPrivateMessage) error {
 			privmsg.QuotedInfoID = id
 		}
 	}
-	content, err := json.Marshal(&msg.Content)
+	content, err := yaml.Marshal(&msg)
 	if err != nil {
 		return errors.Wrap(err, "insert marshal Content error")
 	}
@@ -312,7 +313,7 @@ func (s *Database) InsertGuildChannelMessage(msg *db.StoredGuildChannelMessage) 
 		h.Write(binary.NewWriterF(func(w *binary.Writer) {
 			w.WriteUInt32(uint32(msg.QuotedInfo.PrevGlobalID))
 		}))
-		content, err := json.Marshal(&msg.QuotedInfo.QuotedContent)
+		content, err := yaml.Marshal(&msg.QuotedInfo)
 		if err != nil {
 			return errors.Wrap(err, "insert marshal QuotedContent error")
 		}
@@ -333,7 +334,7 @@ func (s *Database) InsertGuildChannelMessage(msg *db.StoredGuildChannelMessage) 
 			guildmsg.QuotedInfoID = id
 		}
 	}
-	content, err := json.Marshal(&msg.Content)
+	content, err := yaml.Marshal(&msg)
 	if err != nil {
 		return errors.Wrap(err, "insert marshal Content error")
 	}

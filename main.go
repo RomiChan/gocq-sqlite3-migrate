@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/Mrs4s/go-cqhttp/db"
+	"github.com/RomiChan/gocq-sqlite3-migrate/db"
 	"github.com/RomiChan/gocq-sqlite3-migrate/leveldb"
 	"github.com/RomiChan/gocq-sqlite3-migrate/sqlite3"
 )

@@ -1,6 +1,6 @@
 package leveldb
 
-import "github.com/Mrs4s/go-cqhttp/db"
+import "github.com/RomiChan/gocq-sqlite3-migrate/db"
 
 func (r *reader) readStoredGroupMessage() *db.StoredGroupMessage {
 	coder := r.coder()

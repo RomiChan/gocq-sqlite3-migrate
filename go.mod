@@ -8,6 +8,7 @@ require (
 	github.com/Mrs4s/go-cqhttp v1.0.0-rc3.0.20221109121432-fa267b6a2d47
 	github.com/pkg/errors v0.9.1
 	github.com/syndtr/goleveldb v1.0.1-0.20210819022825-2ae1ddf74ef7
+	gopkg.in/yaml.v3 v3.0.1
 )
 
 require (
@@ -28,7 +29,6 @@ require (
 	github.com/tidwall/pretty v1.2.0 // indirect
 	golang.org/x/sys v0.0.0-20220412211240-33da011f77ad // indirect
 	golang.org/x/text v0.3.7 // indirect
-	gopkg.in/yaml.v3 v3.0.1 // indirect
 	modernc.org/libc v1.14.6 // indirect
 	modernc.org/mathutil v1.4.1 // indirect
 	modernc.org/memory v1.0.5 // indirect
